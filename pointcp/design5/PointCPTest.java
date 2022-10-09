@@ -1,5 +1,10 @@
+package design5;
+// This file contains material supporting section 2.9 of the textbook:
+// "Object Oriented Software Engineering" and is issued under the open-source
+// license found at http://www.site.uottawa.ca/school/research/lloseng/
+
 import java.io.*;
-import design2.PointCP;
+
 /**
  * This class prompts the user for a set of coordinates, and then 
  * converts them from polar to cartesian or vice-versa.
@@ -14,10 +19,10 @@ public class PointCPTest
   //Class methods *****************************************************
 
   /**
-   * This method is responsible for the creation of the PointCP
+   * This method is responsible for the creation of the Point
    * object.  This can be done in two ways; the first, by using the
    * command line and running the program using <code> java 
-   * PointCPTest &lt;coordtype (c/p)&gt; &lt;X/RHO&gt; &lt;Y/THETA&gt;
+   * PointTest &lt;coordtype (c/p)&gt; &lt;X/RHO&gt; &lt;Y/THETA&gt;
    * </code> and the second by getting the program to prompt the user.
    * If the user does not enter a valid sequence at the command line,
    * the program will prompte him or her.
@@ -29,18 +34,23 @@ public class PointCPTest
    */
   public static void main(String[] args)
   {
-    PointCP point;
+    Point point;
 
     System.out.println("Cartesian-Polar Coordinates Conversion Program");
 
     // Check if the user input coordinates from the command line
-    // If he did, create the PointCP object from these arguments.
+    // If he did, create the Point object from these arguments.
     // If he did not, prompt the user for them.
     try
     {
-      point = new PointCP(args[0].toUpperCase().charAt(0), 
-        Double.valueOf(args[1]).doubleValue(), 
-        Double.valueOf(args[2]).doubleValue());
+    	if (args[0].toUpperCase().charAt(0) == 'C') {
+    		point = new CartesianPoint(args[0].toUpperCase().charAt(0), Double.valueOf(args[1]).doubleValue(), Double.valueOf(args[2]).doubleValue());
+    	} else if (args[0].toUpperCase().charAt(0) == 'P') {
+    		point = new PolarPoint(args[0].toUpperCase().charAt(0), Double.valueOf(args[1]).doubleValue(), Double.valueOf(args[2]).doubleValue());
+    	} else {
+    		point = null;
+    	}
+        
     }
     catch(Exception e)
     {
@@ -70,15 +80,15 @@ public class PointCPTest
 
   /**
    * This method obtains input from the user and verifies that
-   * it is valid.  When the input is valid, it returns a PointCP
+   * it is valid.  When the input is valid, it returns a Point
    * object.
    *
-   * @return A PointCP constructed using information obtained 
+   * @return A Point constructed using information obtained 
    *         from the user.
    * @throws IOException If there is an error getting input from
    *         the user.
    */
-  private static PointCP getInput() throws IOException
+  private static Point getInput() throws IOException
   {
     byte[] buffer = new byte[1024];  //Buffer to hold byte input
     boolean isOK = false;  // Flag set if input correct
@@ -155,7 +165,14 @@ public class PointCPTest
       //Reset flag so while loop will prompt for other arguments
       isOK = false;
     }
-    //Return a new PointCP object
-    return (new PointCP(coordType, a, b));
+    Point point;
+    //Return a new Point object
+    if (coordType == 'C') {
+    	point = new CartesianPoint(coordType, a, b);
+    } else {
+    	point = new PolarPoint(coordType, a, b);
+    }
+    
+	return point;
   }
 }
